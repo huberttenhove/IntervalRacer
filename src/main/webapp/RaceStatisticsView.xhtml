@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Interval Racer</title>
+    </h:head>
+    <h:body>
+    	<!-- #{PlayerManager.logout()} -->
+    	<h1>Racing Statistics</h1>
+    	#{PlayerManager.logout()}
+    	
+    	<h:dataTable value="#{raceStatisticsView.getStatistics()}" var="playerRaceStatistics"
+		   styleClass="statisticsTable"
+		   headerClass="statisticsTableHeader"
+		   rowClasses="statisticsTableOddRow,statisticsTableEvenRow">
+		   <h:column>    				
+		      <f:facet name="header">Rank</f:facet>    				
+		      #{playerRaceStatistics.finishingPlace}
+		   </h:column>
+		   <h:column>
+		      <f:facet name="header">Name</f:facet>
+		      #{playerRaceStatistics.player.name}
+		   </h:column>
+		   <h:column>
+		      <h:dataTable value="#{playerRaceStatistics.lapStats}" var="lapStatistics"
+				   styleClass="statisticsTable"
+				   headerClass="statisticsTableHeader"
+				   rowClasses="statisticsTableOddRow,statisticsTableEvenRow">
+				   <h:column>
+				      <f:facet name="header">Laps</f:facet>
+				      #{lapStatistics.lapDuration}
+				   </h:column>
+			  </h:dataTable>
+		   </h:column>
+		</h:dataTable>
+		
+		<h:form id="form">
+			<h:commandLink id="redirectLink"
+	    		action="#{raceStatisticsView.redirect()}"/>
+	    </h:form>
+	    		
+		
+		<script type="text/javascript">   
+			function Redirect() 
+			{  
+				var jsfCommandLink;
+				jsfCommandLink = document.getElementById("form:redirectLink");
+				jsfCommandLink.click();
+			} 
+			
+			setTimeout('Redirect()', 30000);   
+		</script>
+    </h:body>
+</html>

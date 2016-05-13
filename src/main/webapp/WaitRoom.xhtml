@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:o="http://omnifaces.org/ui">
+	
+    <h:head>
+    	<title>Interval Racer Waiting Room</title>
+    </h:head>
+    <h:body bgcolor="white">
+    	<f:event type="preRenderView" listener="#{PlayerManager.checkPageNavigation('WaitRoom')}" />
+    	<h2>Waiting Room</h2>
+    	<p>Welcome #{join.getName()}</p>
+		#{waitRoom.joinWaitRoom()}
+		
+		<h:form>
+			<h:panelGroup id="countdowntimer">
+				<p>When two or more players have joined the countdown will start.</p>
+				<p>After the counter reaches 0 the race will start.</p>
+				<p>Current number of players is #{waitRoom.numberOfPlayers}</p>
+				<h1>Race Start in #{waitRoom.secondsUntilRaceStart}</h1>
+			</h:panelGroup>
+			<o:commandScript name="updateCountdown" render="countdowntimer"/>
+			<o:commandScript name="startRace" action="#{waitRoom.startRace()}"/>
+		</h:form>
+		
+		<o:socket port="8080" channel="countdownToRaceStart" onmessage="evaluateCountDown"  onclose="onclosePush"/>
+		
+    	<h:form  rendered="#{not RaceView.isRaceInProgress()}">
+    	   	<h:commandButton value="Configure Race" action="RaceConfig"></h:commandButton>
+    	   	<p>Current Race Configuration:</p>
+    		<p>Laps: #{waitRoom.laps}</p>
+    		<p>Time Interval: #{waitRoom.timeInterval}</p>
+			<h:commandLink id="raceNow"
+	    		action="#{waitRoom.startRace()}"/>
+    	</h:form>
+    	
+    	<script>
+    	
+	    	window.onload = function() {
+	    		window.addEventListener('keydown', doKeyDown);
+				
+	    	}
+	    	
+	    	function doKeyDown(e){
+				var jsfCommandLink;
+				if (e.keyCode == 114) {
+					jsfCommandLink = document.getElementById("form:raceNow");
+					jsfCommandLink.click();
+				}
+	    	}
+	    	
+	    	function evaluateCountDown(message){
+	    		updateCountdown();
+	    		
+	    		if(message == 0){
+	    			startRace();
+	    		}
+	    	}
+	    	
+		    function onclosePush(code) {
+		        if (code == -1) {
+		            alert("Oops! Your browser doesn't seem to support web sockets. The push functionality won't work.")
+		        }
+		        else if (code != 1000) {
+		            alert("Oops! Push has stopped working with error code " + code + "! Reload the page.")
+		        }
+		    }
+		</script>
+    </h:body>
+</html>

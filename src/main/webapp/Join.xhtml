@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Welcome to Interval Racer</title>
+    </h:head>
+    <h:body>
+    	<f:event type="preRenderView" listener="#{PlayerManager.checkPageNavigation('Join')}" />
+    	<h1>Interval Racer</h1>
+    	<section style="border-style: solid; border-width: 2px; width: 500px;">
+			<canvas WIDTH="500" HEIGHT="100" ID="canvas" tabindex="0">
+				If this message is showing the Canvas tag not supported.
+				You must use another browser to play Interval Racer.
+			</canvas>
+		</section>
+    	<br/>
+    	<br/>
+    	<h:form rendered="#{RaceView.isRaceInProgress()}">
+    	   		<h1>Race in progress, you cannot join until race ends</h1>
+		</h:form>
+		<h:form rendered="#{not RaceView.isRaceInProgress()}">
+    	   		<h:inputText value="#{join.name}"></h:inputText>
+    	   		<h:commandButton value="Join Race" action="#{join.joinRace}"></h:commandButton>
+    	</h:form>
+		
+    	<script>
+	    	var canvas;
+			var context;
+			
+			var carImages=['RaceCarYellow.png','RaceCarGreen.png','RaceCarRed.png','RaceCarBlue.png','RaceCarOrange.png','RaceCarWhite.png']
+			var cars = [];
+			
+			window.onload = function() {
+				canvas = document.getElementById("canvas");
+				context = canvas.getContext("2d");
+				
+				for(var i = 0; i &lt; carImages.length; i++){
+					var image = new Image();
+					image.src = "resources/images/" + carImages[i];
+					cars.push(image);
+				}			
+				
+				var moveInterval = setInterval(function() {
+					draw();
+				}, 30);
+			}
+			
+			function draw() {
+				context.clearRect(0, 0, 600, 600);
+				 
+				for(var i = 0; i &lt; cars.length; i++){
+					drawImage(cars[i], 70 + (70 * i), 35);
+				}			
+			}
+			
+			function drawImage(image, x, y){
+				context.save();
+				context.translate(x, y);
+				context.drawImage(image, -(image.width/2), -(image.width/2));
+				context.restore();
+			}
+    	</script>
+    </h:body>
+</html>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:o="http://omnifaces.org/ui">
+	
+    <h:head>
+    	<title>Interval Racer</title>
+    </h:head>
+    <h:body bgcolor="white">
+    	<f:event type="preRenderView" listener="#{PlayerManager.checkPageNavigation('RaceView')}" />
+    	<h2>Welcome #{join.player.name}</h2>
+    	<h2>Your Car Color is: #{join.player.car.color.toString()}</h2>
+
+		<section style="border-style: solid; border-width: 2px; width: 800px;">
+			<canvas WIDTH="800" HEIGHT="600" ID="canvas" tabindex="0">
+				If this message is showing the Canvas tag not supported.
+				You must use another browser to play Interval Racer.
+			</canvas>
+		</section>
+		
+		<h:form id="form">
+			<h:commandLink id="faster"
+	    		action="#{join.setNewCommand('Faster')}"/>
+	    	<h:commandLink id="slower"
+	    		action="#{join.setNewCommand('Slower')}"/>
+	    	<h:commandLink id="left"
+	    		action="#{join.setNewCommand('Left')}"/>
+	    	<h:commandLink id="right"
+	    		action="#{join.setNewCommand('Right')}"/>
+	    	<h:commandLink id="goToStatistics"
+	    		action="#{RaceView.showStatistics()}"/>
+		</h:form>
+		
+		<o:socket port="8080" channel="raceHeartBeat" onmessage="processMessage"  onclose="onclosePush"/>
+		
+		<h:outputScript library="js" name="drawTrack.js" />
+		
+		<h:outputScript>
+			var canvas;
+			var context;
+			
+			var carImages=['RaceCarYellow.png','RaceCarGreen.png','RaceCarRed.png','RaceCarBlue.png','RaceCarOrange.png','RaceCarWhite.png']
+			var cars = [];
+			
+			var players = #{RaceView.getPlayersInJson()};
+			
+			window.onload = function() {
+				canvas = document.getElementById("canvas");
+				context = canvas.getContext("2d");
+				
+				for(var i = 0; i &lt; carImages.length; i++){
+					var image = new Image();
+					image.src = "resources/images/" + carImages[i];
+					cars.push(image);
+				}			
+					 			
+				window.addEventListener('keydown', doKeyDown);
+				
+				var moveInterval = setInterval(function() {
+					draw();
+				}, 30);
+			}
+			
+			function draw() {
+				context = canvas.getContext("2d");
+				context.clearRect(0, 0, 600, 600);
+				 
+				context.save();
+				
+				drawTrack();
+	
+				for(var i = 0; i &lt; players.length; i++){
+					//iterate over players and draw the cars!
+					drawCarImage(cars[i], players[i].car.position.x, players[i].car.position.y, players[i].car.direction);
+				}			
+				context.restore();
+			}
+			
+			function drawCarImage(image, x, y, angle){
+				context.save();
+				context.translate(x, y);
+				context.rotate(angle * Math.PI / 180);
+				context.drawImage(image, -(image.width/2), -(image.width/2));
+				context.restore();
+			}
+			
+			function doKeyDown(e){
+				var jsfCommandLink;
+				if (e.keyCode == 87 || e.keyCode == 38) {
+					jsfCommandLink = document.getElementById("form:faster");
+					jsfCommandLink.click();
+				}
+	
+				if (e.keyCode == 83 || e.keyCode == 40) {
+					jsfCommandLink = document.getElementById("form:slower");
+					jsfCommandLink.click();
+				}
+	
+				if (e.keyCode == 65 || e.keyCode == 37) {
+					jsfCommandLink = document.getElementById("form:left");
+					jsfCommandLink.click();
+				}
+	
+				if (e.keyCode == 68 || e.keyCode == 39) {
+					jsfCommandLink = document.getElementById("form:right");
+					jsfCommandLink.click();
+				}
+			}
+			
+			function processMessage(message){
+				if(message == "raceFinished"){
+					var jsfCommandLink;
+					jsfCommandLink = document.getElementById("form:goToStatistics");
+					jsfCommandLink.click();
+				}else{
+					refreshPage(message);
+				}		
+			}
+			
+			function refreshPage(message){
+				players = message;
+				location.reload();
+			}
+			
+			function onclosePush(code) {
+				if (code == -1) {
+			    	alert("Oops! Your browser doesn't seem to support web sockets. The push functionality won't work.")
+			    } else if (code != 1000) {
+			        alert("Oops! Push has stopped working with error code " + code + "! Reload the page.")
+			    }
+			}
+    	</h:outputScript>
+		
+    </h:body>
+</html>
