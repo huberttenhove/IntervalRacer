@@ -71,4 +71,14 @@ public class RaceImpl implements Race, Serializable {
 	public RaceStatistics getRaceStatistics() {
 		return raceStatistics;
 	}
+
+	public void resetRace() {
+		players = new ArrayList<Player>();
+		raceConfig = new RaceConfig(3, 500, 15);
+		raceTrack = new SimpleTrack();
+	}
+
+	public void resetStatistics() {
+		raceStatistics = new RaceStatistics();
+	}
 }

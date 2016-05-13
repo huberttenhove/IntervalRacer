@@ -27,6 +27,7 @@ public class RaceStatisticsView {
 	}
 
 	public String redirect() {
+		raceView.getRace().resetStatistics();
 		return "Join";
 	}
 }

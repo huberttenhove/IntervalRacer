@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import com.intervalracer.backingbeans.RaceView;
@@ -69,6 +70,7 @@ public class RaceEngine extends TimerTask {
 		if (!engineRunning) {
 			raceInProgress = true;
 			engineRunning = true;
+			finishTimeFirstPlayer = 0;
 			timer.scheduleAtFixedRate(this, 1000, (long) race.getRaceConfig().getTimeInterval());
 			startTimeOfRace = System.currentTimeMillis();
 			race.startRace();
@@ -116,11 +118,14 @@ public class RaceEngine extends TimerTask {
 			finishTimeFirstPlayer = System.currentTimeMillis();
 		}
 
-		long raceDurationInMinutes = (System.currentTimeMillis() - startTimeOfRace) / 1000 / 60;
-		long raceDurationAfterFirstFinishInMinutes = (System.currentTimeMillis() - finishTimeFirstPlayer) / 1000 / 60;
+		long raceDurationInMinutes = TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - startTimeOfRace);
+		long raceDurationAfterFirstFinishInMinutes = TimeUnit.MILLISECONDS
+		                .toMinutes(System.currentTimeMillis() - finishTimeFirstPlayer);
 
 		if (raceDurationInMinutes > race.getRaceConfig().getMaximumRaceDuration()
-		                || raceDurationAfterFirstFinishInMinutes > MAX_TIME_AFTER_FIRST_FINISH) {
+		                || (hasPlayerFinished && raceDurationAfterFirstFinishInMinutes > MAX_TIME_AFTER_FIRST_FINISH)) {
+			System.out.println("STOPPING Race Engine, race duration exceeded. Duration: " + raceDurationInMinutes
+			                + " DurationafterFirstFinish: " + raceDurationAfterFirstFinishInMinutes);
 			stopEngine("Race Duration passed.");
 		}
 	}

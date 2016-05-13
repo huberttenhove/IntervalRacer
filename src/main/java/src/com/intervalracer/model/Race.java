@@ -39,4 +39,14 @@ public interface Race {
 	 * Starts the Race.
 	 */
 	public void startRace();
+
+	/**
+	 * Resets the race. so a new one can be started
+	 */
+	public void resetRace();
+
+	/**
+	 * Resets the race statistics.
+	 */
+	public void resetStatistics();
 }

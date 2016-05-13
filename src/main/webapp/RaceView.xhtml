@@ -121,8 +121,7 @@
 			}
 			
 			function refreshPage(message){
-				players = message;
-				location.reload();
+				players = JSON.parse(message);
 			}
 			
 			function onclosePush(code) {

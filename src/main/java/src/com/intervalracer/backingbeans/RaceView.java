@@ -51,6 +51,7 @@ public class RaceView {
 	}
 
 	public String showStatistics() {
+		race.resetRace();
 		return "RaceStatisticsView";
 	}
 
