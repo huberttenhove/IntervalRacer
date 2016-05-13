@@ -22,8 +22,10 @@ public class CheckpointEvaluator {
 	/**
 	 * evaluates if a car drives through a checkpoint or the finish. Checkpoints
 	 * need to be passed in order, the finish is a special kind of checkpoint.
+	 * 
+	 * @return true if a player has finished this turn.
 	 */
-	public void evaluateCheckpointsAndFinish(Player player, RaceStatistics raceStatistics) {
+	public boolean evaluateCheckpointsAndFinish(Player player, RaceStatistics raceStatistics) {
 		PlayerRaceStatistics playerRaceStatistics = raceStatistics.getPlayerRaceStatistics(player);
 		TrackElement trackElementForCarPosition = race.getRaceTrack()
 		                .getTrackElementForPosition(player.getCar().getPosition());
@@ -34,16 +36,20 @@ public class CheckpointEvaluator {
 			if (lastCheckpointPassed + 1 == checkpointNr) {
 				playerRaceStatistics.passCheckpoint(checkpointNr);
 
-				checkIfPlayerFinished(player, raceStatistics, trackElementForCarPosition);
+				return checkIfPlayerFinished(player, raceStatistics, trackElementForCarPosition);
 			}
 		}
+
+		return false;
 	}
 
 	/**
 	 * Checks if the {@link TrackElement} that is passed is the finish. If so
 	 * set state of car to finished. otherwise start a new lap.
+	 * 
+	 * @return true if a player has finished;
 	 */
-	private void checkIfPlayerFinished(Player player, RaceStatistics raceStatistics,
+	private boolean checkIfPlayerFinished(Player player, RaceStatistics raceStatistics,
 	                TrackElement trackElementForCarPosition) {
 		if (trackElementForCarPosition.isFinish()) {
 			PlayerRaceStatistics playerRaceStatistics = raceStatistics.getPlayerRaceStatistics(player);
@@ -52,9 +58,11 @@ public class CheckpointEvaluator {
 			if (finishedLap == race.getRaceConfig().getLaps()) {
 				raceStatistics.playerFinished(player);
 				player.getCar().setCarState(CarState.FINISHED);
+				return true;
 			} else {
 				playerRaceStatistics.startNewLap();
 			}
 		}
+		return false;
 	}
 }

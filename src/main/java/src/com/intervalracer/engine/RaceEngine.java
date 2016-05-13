@@ -41,6 +41,8 @@ public class RaceEngine extends TimerTask {
 
 	private long startTimeOfRace;
 
+	private long finishTimeFirstPlayer;
+
 	public RaceEngine(Race race, RaceView raceView, CommandEvaluator commandEvaluator,
 	                PositionTranslator positionTranslator, CheckpointEvaluator checkpointEvaluator) {
 		this.race = race;
@@ -52,6 +54,7 @@ public class RaceEngine extends TimerTask {
 		timer = new Timer();
 		engineRunning = false;
 		raceInProgress = false;
+		finishTimeFirstPlayer = 0;
 	}
 
 	/**
@@ -96,8 +99,9 @@ public class RaceEngine extends TimerTask {
 			noOneIsRacing = false;
 			commandEvaluator.evaluatePlayersLastCommand(player);
 			positionTranslator.translatePlayerRaceCarPosition(player);
-			checkpointEvaluator.evaluateCheckpointsAndFinish(player, race.getRaceStatistics());
-			checkRaceDuration();
+			boolean hasPlayerFinished = checkpointEvaluator.evaluateCheckpointsAndFinish(player,
+			                race.getRaceStatistics());
+			checkRaceDuration(hasPlayerFinished);
 		}
 
 		if (noOneIsRacing) {
@@ -107,10 +111,16 @@ public class RaceEngine extends TimerTask {
 		}
 	}
 
-	private void checkRaceDuration() {
+	private void checkRaceDuration(boolean hasPlayerFinished) {
+		if (hasPlayerFinished && finishTimeFirstPlayer == 0) {
+			finishTimeFirstPlayer = System.currentTimeMillis();
+		}
+
 		long raceDurationInMinutes = (System.currentTimeMillis() - startTimeOfRace) / 1000 / 60;
+		long raceDurationAfterFirstFinishInMinutes = (System.currentTimeMillis() - finishTimeFirstPlayer) / 1000 / 60;
+
 		if (raceDurationInMinutes > race.getRaceConfig().getMaximumRaceDuration()
-		                || raceDurationInMinutes > MAX_TIME_AFTER_FIRST_FINISH) {
+		                || raceDurationAfterFirstFinishInMinutes > MAX_TIME_AFTER_FIRST_FINISH) {
 			stopEngine("Race Duration passed.");
 		}
 	}
