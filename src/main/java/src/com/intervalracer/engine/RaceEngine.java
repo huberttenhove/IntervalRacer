@@ -1,8 +1,13 @@
 package com.intervalracer.engine;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.google.gson.Gson;
 import com.intervalracer.backingbeans.RaceView;
 import com.intervalracer.model.Player;
 import com.intervalracer.model.Race;
@@ -116,6 +121,17 @@ public class RaceEngine extends TimerTask {
 		raceInProgress = false;
 		engineRunning = false;
 		raceView.notifyClientsRaceFinished();
+		saveStatistics();
+	}
+
+	private void saveStatistics() {
+		String statisticsJson = new Gson().toJson(race.getRaceStatistics().getAllPlayersStatistics());
+		Path file = Paths.get("Statistics-" + System.currentTimeMillis() + ".stats");
+		try {
+			Files.write(file, statisticsJson.getBytes());
+		} catch (IOException e) {
+			System.out.println("Error writing statistics to file: " + e);
+		}
 	}
 
 	/**
