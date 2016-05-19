@@ -12,7 +12,7 @@
     <h:body bgcolor="white">
     	<f:event type="preRenderView" listener="#{PlayerManager.checkPageNavigation('WaitRoom')}" />
     	<h2>Waiting Room</h2>
-    	<p>Welcome #{join.getName()}</p>
+    	<p>Welcome #{PlayerManager.player.name}</p>
 		#{waitRoom.joinWaitRoom()}
 		
 		<h:form>
