@@ -54,15 +54,6 @@ public class Join {
 	}
 
 	/**
-	 * Accepts new commands from player. Returns redirect=true so after reload a
-	 * command is not given again.
-	 */
-	public String setNewCommand(String command) {
-		playerManager.getPlayer().setLastCommand(command);
-		return "RaceView?faces-redirect=true";
-	}
-
-	/**
 	 * Checks if the race is in progress.
 	 */
 	public boolean isRaceStarted() {

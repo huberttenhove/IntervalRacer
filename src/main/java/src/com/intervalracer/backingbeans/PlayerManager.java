@@ -31,6 +31,14 @@ public class PlayerManager implements Serializable {
 		return player;
 	}
 
+	/**
+	 * Accepts new commands from player. Returns redirect=true so after reload a
+	 * command is not given again.
+	 */
+	public void setNewCommand(String command) {
+		player.setLastCommand(command);
+	}
+
 	public void logout() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
