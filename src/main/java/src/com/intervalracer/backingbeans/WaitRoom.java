@@ -38,10 +38,6 @@ public class WaitRoom {
 		this.raceView = raceView;
 	}
 
-	public int getNumberOfPlayers() {
-		return raceView.getRace().getPlayers().size();
-	}
-
 	public void startRace() {
 		try {
 			killTimer();
@@ -50,14 +46,6 @@ public class WaitRoom {
 		} catch (IOException e) {
 			System.out.println("ERROR: Unable to forward clients to the race. " + e);
 		}
-	}
-
-	public int getLaps() {
-		return raceView.getRace().getRaceConfig().getLaps();
-	}
-
-	public int getTimeInterval() {
-		return raceView.getRace().getRaceConfig().getTimeInterval();
 	}
 
 	/**

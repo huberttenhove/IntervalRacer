@@ -19,7 +19,7 @@
 			<h:panelGroup id="countdowntimer">
 				<p>When two or more players have joined the countdown will start.</p>
 				<p>After the counter reaches 0 the race will start.</p>
-				<p>Current number of players is #{waitRoom.numberOfPlayers}</p>
+				<p>Current number of players is #{RaceView.race.players.size()}</p>
 				<h1>Race Start in #{waitRoom.secondsUntilRaceStart}</h1>
 			</h:panelGroup>
 			<o:commandScript name="updateCountdown" render="countdowntimer"/>
@@ -31,8 +31,8 @@
     	<h:form  rendered="#{not RaceView.isRaceInProgress()}">
     	   	<h:commandButton value="Configure Race" action="RaceConfig"></h:commandButton>
     	   	<p>Current Race Configuration:</p>
-    		<p>Laps: #{waitRoom.laps}</p>
-    		<p>Time Interval: #{waitRoom.timeInterval}</p>
+    		<p>Laps: #{RaceView.race.raceConfig.laps}</p>
+    		<p>Time Interval: #{RaceView.race.raceConfig.timeInterval}</p>
 			<h:commandLink id="raceNow"
 	    		action="#{waitRoom.startRace()}"/>
     	</h:form>
