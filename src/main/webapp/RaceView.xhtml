@@ -53,12 +53,7 @@
 			var carImages=['RaceCarYellow.png','RaceCarGreen.png','RaceCarRed.png','RaceCarBlue.png','RaceCarOrange.png','RaceCarWhite.png'];
 			var cars = [];
 			
-			var trackElementsImages = ['HorizontalTrack.png', 'VerticalTrack.png', 'UpperLeftCorner.png', 'UpperRightCorner.png', 'LowerLeftCorner.png', 'LowerRightCorner.png', 'HorizontalFinish.png', 'VerticalFinish.png'];
-			var trackElements =[];
-			
 			var players = #{RaceView.getPlayersInJson()};
-			
-			var track = #{RaceView.getTrackInJson()};
 			
 			window.onload = function() {
 				canvas = document.getElementById("canvas");
@@ -70,11 +65,6 @@
 					cars.push(image);
 				}			
 				
-				for(var i = 0; i &lt; trackElementsImages.length; i++){
-					var image = new Image();
-					image.src = "resources/images/trackelements/" + trackElementsImages[i];
-					trackElements.push(image);
-				}
 					 			
 				window.addEventListener('keydown', doKeyDown);
 				
@@ -89,7 +79,6 @@
 				 
 				context.save();
 				
-				drawTrackFromImages();
 				drawTrack();
 	
 				for(var i = 0; i &lt; players.length; i++){
