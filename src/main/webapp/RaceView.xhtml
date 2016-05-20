@@ -23,13 +23,21 @@
 		
 		<h:form id="form">
 			<h:commandLink id="faster"
-	    		action="#{PlayerManager.setNewCommand('Faster')}"/>
+	    		action="#{PlayerManager.setNewCommand('Faster')}">
+				<f:ajax execute="@form" render="@form" />	    	
+	    	</h:commandLink>
 	    	<h:commandLink id="slower"
-	    		action="#{PlayerManager.setNewCommand('Slower')}"/>
+	    		action="#{PlayerManager.setNewCommand('Slower')}">
+				<f:ajax execute="@form" render="@form" />	    	
+	    	</h:commandLink>
 	    	<h:commandLink id="left"
-	    		action="#{PlayerManager.setNewCommand('Left')}"/>
+	    		action="#{PlayerManager.setNewCommand('Left')}">
+				<f:ajax execute="@form" render="@form" />	    	
+	    	</h:commandLink>
 	    	<h:commandLink id="right"
-	    		action="#{PlayerManager.setNewCommand('Right')}"/>
+	    		action="#{PlayerManager.setNewCommand('Right')}">
+				<f:ajax execute="@form" render="@form" />	    	
+	    	</h:commandLink>
 	    	<h:commandLink id="goToStatistics"
 	    		action="#{RaceView.showStatistics()}"/>
 		</h:form>
@@ -42,10 +50,15 @@
 			var canvas;
 			var context;
 			
-			var carImages=['RaceCarYellow.png','RaceCarGreen.png','RaceCarRed.png','RaceCarBlue.png','RaceCarOrange.png','RaceCarWhite.png']
+			var carImages=['RaceCarYellow.png','RaceCarGreen.png','RaceCarRed.png','RaceCarBlue.png','RaceCarOrange.png','RaceCarWhite.png'];
 			var cars = [];
 			
+			var trackElementsImages = ['HorizontalTrack.png', 'VerticalTrack.png', 'UpperLeftCorner.png', 'UpperRightCorner.png', 'LowerLeftCorner.png', 'LowerRightCorner.png', 'HorizontalFinish.png', 'VerticalFinish.png'];
+			var trackElements =[];
+			
 			var players = #{RaceView.getPlayersInJson()};
+			
+			var track = #{RaceView.getTrackInJson()};
 			
 			window.onload = function() {
 				canvas = document.getElementById("canvas");
@@ -57,6 +70,12 @@
 					cars.push(image);
 				}			
 				
+				for(var i = 0; i &lt; trackElementsImages.length; i++){
+					var image = new Image();
+					image.src = "resources/images/trackelements/" + trackElementsImages[i];
+					trackElements.push(image);
+				}
+					 			
 				window.addEventListener('keydown', doKeyDown);
 				
 				var moveInterval = setInterval(function() {
@@ -70,6 +89,7 @@
 				 
 				context.save();
 				
+				drawTrackFromImages();
 				drawTrack();
 	
 				for(var i = 0; i &lt; players.length; i++){
