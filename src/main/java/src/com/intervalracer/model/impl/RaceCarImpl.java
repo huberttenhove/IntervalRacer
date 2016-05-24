@@ -15,13 +15,13 @@ public class RaceCarImpl implements RaceCar, Serializable {
 
 	private static final long serialVersionUID = 7263496512254814737L;
 
-	public static final int MAX_SPEED_ON_GRASS = 30;
+	public static final int MAX_SPEED_ON_GRASS = 10;
 
-	public static final int MIN_SPEED = -30;
+	public static final int MIN_SPEED = -10;
 
-	public static final int MAX_SPEED = 60;
+	public static final int MAX_SPEED = 20;
 
-	public static final int SPEED_STEP = 30;
+	public static final int SPEED_STEP = 10;
 
 	public static final int MAX_DIRECTION = 360;
 

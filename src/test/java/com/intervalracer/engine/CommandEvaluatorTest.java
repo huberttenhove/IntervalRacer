@@ -46,7 +46,7 @@ public class CommandEvaluatorTest {
 
 		assertEquals(RaceCarCommands.NONE, player.getLastCommand());
 		assertEquals(player.getCar().getDirection(), 0);
-		assertEquals(player.getCar().getSpeed(), 30);
+		assertEquals(player.getCar().getSpeed(), RaceCarImpl.SPEED_STEP);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class CommandEvaluatorTest {
 
 		assertEquals(RaceCarCommands.NONE, player.getLastCommand());
 		assertEquals(player.getCar().getDirection(), 0);
-		assertEquals(player.getCar().getSpeed(), -30);
+		assertEquals(player.getCar().getSpeed(), -RaceCarImpl.SPEED_STEP);
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class CommandEvaluatorTest {
 		commandEvaluator.evaluatePlayersLastCommand(player);
 
 		assertEquals(RaceCarCommands.NONE, player.getLastCommand());
-		assertEquals(player.getCar().getDirection(), -30);
+		assertEquals(player.getCar().getDirection(), -RaceCarImpl.DIRECTION_CHANGE);
 		assertEquals(player.getCar().getSpeed(), 0);
 	}
 
@@ -75,7 +75,7 @@ public class CommandEvaluatorTest {
 		commandEvaluator.evaluatePlayersLastCommand(player);
 
 		assertEquals(RaceCarCommands.NONE, player.getLastCommand());
-		assertEquals(player.getCar().getDirection(), 30);
+		assertEquals(player.getCar().getDirection(), RaceCarImpl.DIRECTION_CHANGE);
 		assertEquals(player.getCar().getSpeed(), 0);
 	}
 
@@ -88,8 +88,8 @@ public class CommandEvaluatorTest {
 		commandEvaluator.evaluatePlayersLastCommand(player);
 
 		assertEquals(RaceCarCommands.NONE, player.getLastCommand());
-		assertEquals(player.getCar().getDirection(), 30);
-		assertEquals(player.getCar().getSpeed(), 30);
+		assertEquals(player.getCar().getDirection(), RaceCarImpl.DIRECTION_CHANGE);
+		assertEquals(player.getCar().getSpeed(), RaceCarImpl.SPEED_STEP);
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class CommandEvaluatorTest {
 
 		assertEquals(RaceCarCommands.NONE, player.getLastCommand());
 		assertEquals(player.getCar().getDirection(), 0);
-		assertEquals(player.getCar().getSpeed(), -30);
+		assertEquals(player.getCar().getSpeed(), RaceCarImpl.MIN_SPEED);
 	}
 
 	@Test
@@ -118,6 +118,6 @@ public class CommandEvaluatorTest {
 
 		assertEquals(RaceCarCommands.NONE, player.getLastCommand());
 		assertEquals(player.getCar().getDirection(), 0);
-		assertEquals(player.getCar().getSpeed(), 60);
+		assertEquals(player.getCar().getSpeed(), RaceCarImpl.MAX_SPEED);
 	}
 }

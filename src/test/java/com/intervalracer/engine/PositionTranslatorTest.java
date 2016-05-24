@@ -1,6 +1,7 @@
 package com.intervalracer.engine;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.Point;
 
@@ -47,7 +48,7 @@ public class PositionTranslatorTest {
 		car.increaseSpeed();
 		translator.translatePlayerRaceCarPosition(player);
 
-		assertEquals(car.getPosition(), new Point(carX, carY - 30));
+		assertEquals(car.getPosition(), new Point(carX, carY - RaceCarImpl.SPEED_STEP));
 	}
 
 	@Test
@@ -57,7 +58,7 @@ public class PositionTranslatorTest {
 		car.increaseSpeed();
 		translator.translatePlayerRaceCarPosition(player);
 
-		assertEquals(car.getPosition(), new Point(carX, carY - 60));
+		assertEquals(car.getPosition(), new Point(carX, carY - (RaceCarImpl.SPEED_STEP * 2)));
 	}
 
 	@Test
@@ -66,32 +67,49 @@ public class PositionTranslatorTest {
 		car.decreaseSpeed();
 		translator.translatePlayerRaceCarPosition(player);
 
-		assertEquals(car.getPosition(), new Point(carX, carY + 30));
+		assertEquals(car.getPosition(), new Point(carX, carY + RaceCarImpl.SPEED_STEP));
 	}
 
 	@Test
 	public void translateCarFullSpeedLeft() {
 		RaceCar car = player.getCar();
+		Point startingPosition = new Point(car.getPosition().x, car.getPosition().y);
 		car.increaseSpeed();
 		car.increaseSpeed();
 		car.turnLeft();
 		translator.translatePlayerRaceCarPosition(player);
 
-		// 29^2 + 51^2 = speed^2 --> speed = 58.7 (should be 60, Rounding
-		// differences accepted)
-		assertEquals(car.getPosition(), new Point(71, 249));
+		// Check if the calculated speed is the same as the speed of the car,
+		// Rounding differences of 15% accepted
+		int carSpeed = car.getSpeed();
+		double calcSpeed = calculatedSpeed(startingPosition, player.getCar().getPosition());
+		assertTrue((carSpeed / calcSpeed) % 1 < 0.15);
 	}
 
 	@Test
 	public void translateCarHalfSpeedRight() {
 		RaceCar car = player.getCar();
+		Point startingPosition = new Point(car.getPosition().x, car.getPosition().y);
 		car.increaseSpeed();
 		car.turnRight();
 		translator.translatePlayerRaceCarPosition(player);
 
-		// 14^2 + 25^2 = speed^2 --> speed = 28.7 (should be 30, Rounding
-		// differences accepted)
-		assertEquals(car.getPosition(), new Point(114, 275));
+		// Check if the calculated speed is the same as the speed of the car,
+		// Rounding differences of 15% accepted
+		int carSpeed = car.getSpeed();
+		double calcSpeed = calculatedSpeed(startingPosition, player.getCar().getPosition());
+		assertTrue((carSpeed / calcSpeed) % 1 < 0.15);
+	}
+
+	// Based on the translation of the car calculate the speed.
+	// Using: x^2 + y^2 = speed^2
+	private double calculatedSpeed(Point oldPosition, Point newPosition) {
+
+		int x = oldPosition.x - newPosition.x;
+		int y = oldPosition.y - newPosition.y;
+
+		double speed = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		return Math.abs(speed);
 	}
 
 	@Test
@@ -102,23 +120,23 @@ public class PositionTranslatorTest {
 		car.increaseSpeed();
 		translator.translatePlayerRaceCarPosition(player);
 
-		assertEquals(car.getPosition(), new Point(carX, carY - 30));
+		assertEquals(car.getPosition(), new Point(carX, carY - RaceCarImpl.MAX_SPEED_ON_GRASS));
 	}
 
 	@Test
 	public void carDrivesFullSpeedIntoGrassThenSlowsDownAndThenCrashes() {
 		RaceCar car = player.getCar();
-		car.resetToPosition(new Point(60, 140));
+		car.resetToPosition(new Point(60, 100));
 		car.increaseSpeed();
 		car.increaseSpeed();
 
 		assertEquals(car.getCarState(), CarState.ON_ROAD);
 		translator.translatePlayerRaceCarPosition(player);
-		assertEquals(car.getPosition(), new Point(60, 140 - 60));
+		assertEquals(car.getPosition(), new Point(60, 100 - (RaceCarImpl.SPEED_STEP * 2)));
 		assertEquals(car.getCarState(), CarState.ON_GRASS);
 		car.decreaseSpeed();
 		translator.translatePlayerRaceCarPosition(player);
-		assertEquals(car.getPosition(), new Point(60, 140 - 90));
+		assertEquals(car.getPosition(), new Point(60, 100 - (RaceCarImpl.SPEED_STEP * 3)));
 		assertEquals(car.getCarState(), CarState.CRASHED);
 	}
 
