@@ -90,8 +90,8 @@ public class SimpleTrack implements RaceTrack, Serializable {
 		int xPos = position.x;
 		int yPos = position.y;
 
-		int elementXLoc = (xPos - 1) / TrackElementDefaults.ELEMENT_SIZE.getValue();
-		int elementYLoc = (yPos - 1) / TrackElementDefaults.ELEMENT_SIZE.getValue();
+		int elementXLoc = xPos / TrackElementDefaults.ELEMENT_SIZE.getValue();
+		int elementYLoc = yPos / TrackElementDefaults.ELEMENT_SIZE.getValue();
 
 		return track[elementXLoc][elementYLoc];
 	}
