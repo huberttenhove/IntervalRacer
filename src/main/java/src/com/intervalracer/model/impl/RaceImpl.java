@@ -74,7 +74,7 @@ public class RaceImpl implements Race, Serializable {
 
 	public void resetRace() {
 		players = new ArrayList<Player>();
-		raceConfig = new RaceConfig(3, 500, 15);
+		raceConfig = new RaceConfig(3, 50, 15);
 		raceTrack = new SimpleTrack();
 	}
 
