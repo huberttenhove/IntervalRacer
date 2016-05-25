@@ -30,7 +30,7 @@ public class RaceImpl implements Race, Serializable {
 
 	public RaceImpl() {
 		players = new ArrayList<Player>();
-		raceConfig = new RaceConfig(3, 50, 15);
+		raceConfig = new RaceConfig(3, 80, 15);
 		raceTrack = new SimpleTrack();
 		raceStatistics = new RaceStatistics();
 	}
@@ -74,7 +74,7 @@ public class RaceImpl implements Race, Serializable {
 
 	public void resetRace() {
 		players = new ArrayList<Player>();
-		raceConfig = new RaceConfig(3, 50, 15);
+		raceConfig = new RaceConfig(3, 80, 15);
 		raceTrack = new SimpleTrack();
 	}
 
