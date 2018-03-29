@@ -13,7 +13,7 @@ This will build the project and produce a war file.
 deploy the war file in you glassfish server using the glassfish admin console (localhost:4848)
 The default settings can be used when deploying.
 
-Goto the following URL on your machine or press the launch button from the admin console of weblogic
+Goto the following URL on your machine or press the launch button from the admin console of glassfish
 	localhost:8080/IntervalRacer
 	
 Enjoy the race
